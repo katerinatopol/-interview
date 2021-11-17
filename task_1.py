@@ -10,7 +10,7 @@
 list_to_str = lambda mult_table: '\t'.join([str(i) for i in mult_table])
 
 
-def table_multiplication(columns, line):
+def table_multiplication(columns: int, line: int):
     for i in range(line + 1)[1:]:
         row = []
         for j in range(columns + 1)[1:]:
