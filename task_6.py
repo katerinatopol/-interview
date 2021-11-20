@@ -40,5 +40,9 @@ print(ItemDiscountReport1.get_info(prod_1))
 print(ItemDiscountReport2.get_info(prod_2))
 
 # 3 способ
+print(prod_1.__getattribute__('get_info')())
+print(prod_2.__getattribute__('get_info')())
+
+# 4 способ
 print(ItemDiscountReport1('Product_n', 222).get_info())
 print(ItemDiscountReport2('Test_n', 333).get_info())
