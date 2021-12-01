@@ -12,7 +12,7 @@ from random import randint, choice
 from string import ascii_letters
 
 
-def create_file(file_name):
+def create_file(file_name, substr=None, new_val=None, mode=0):
     if os.path.exists(file_name):
         print('Файл существует')
     else:
@@ -27,27 +27,31 @@ def create_file(file_name):
             for el in res_lst:
                 f.writelines(f'{el[0]} - {el[1]}\n')
 
-        file_read(file_name, substr='a', new_val=None, mode=1)
+        file_read(file_name, substr=substr, new_val=new_val, mode=mode)
 
 
 def file_read(file, substr=None, new_val=None, mode=0):
     with open(file, encoding='utf') as f:
         if mode == 0:  # просто печать
-            text = f.readlines()
-            for line in text:
+            lines = f.readlines()
+            for line in lines:
                 print(line)
-        elif mode == 1 and substr:  # вывод первого вхождения
+        elif substr:  # вывод первого вхождения
             text = f.read()
-            pattern = f'{substr}'
-            print(pattern)
-            print(re.search(pattern, text))
-        elif mode == 2 and substr:  # вывод всех вхождений
-            text = f.read()
-            print(re.findall(substr, text))
-        elif mode == 3 and substr and new_val:  # замена всех найденных подстрок на новое значение
-            text = f.read()
-            text = re.sub(substr, new_val, text)
+            match = re.search(substr, text)
+            if match is None:
+                print(f'Нет вхождений подстроки "{substr}"')
+            elif match and mode == 1:
+                print(f'Первое вхождение подстроки "{substr}": {match.start()}')
+            elif match and mode == 2:  # вывод всех вхождений
+                print(f'Все вхождения подстроки "{substr}": {[m.start() for m in re.finditer(substr, text)]}')
+            elif match and mode == 3 and new_val:  # замена всех найденных подстрок на новое значение
+                f.seek(0)
+                lines = f.readlines()
+                for line in lines:
+                    line = re.sub(substr, new_val, line)
+                    print(line)
 
 
 if __name__ == '__main__':
-    create_file('test_file.txt')
+    create_file('test_file.txt', substr='a', new_val='nnnnn', mode=3)
