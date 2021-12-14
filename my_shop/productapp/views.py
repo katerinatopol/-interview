@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.views.generic import ListView
-from .models import Product
+from .models import Product, Category
 
 
 class ProductsListView(ListView):
     model = Product
     template_name = 'goods_list.html'
-    queryset = Product.objects.all()
 
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
+    def get_queryset(self):
+        category_pk = self.kwargs.get('category_pk')
+        queryset = Product.objects.select_related('vendor_name').prefetch_related('categories')
+        return queryset.all() if not category_pk else queryset.filter(categories__id__contains=category_pk)

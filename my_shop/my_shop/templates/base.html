@@ -16,6 +16,21 @@
     </nav>
 </div>
 
+<div style="display: flex;">
+
+    <div>
+    <a href="{% url 'products:index' %}">Смотреть все</a>
+        {% for category in category_list %}
+            <a href="{% url 'products:category' category.id %}">{{ category.name }}</a>
+        {% endfor %}
+    </div>
+
+    <div style="padding: 15px; width: 100%;">
+        {% block page_content %} {% endblock %}
+    </div>
+
+</div>
+
 {% block page_content %} {% endblock %}
 
 </body>

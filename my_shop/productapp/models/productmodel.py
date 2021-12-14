@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+from .categorymodel import Category
 
 
 class Product(models.Model):
@@ -10,6 +11,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=2, default=0, verbose_name='цена')
     unit = models.CharField(max_length=10, verbose_name='единица измерения')
     vendor_name = models.CharField(max_length=255, verbose_name='имя поставщика')
+    categories = models.ManyToManyField(Category, verbose_name='разделы', related_name='products')
 
     class Meta:
         verbose_name = 'Товар'
