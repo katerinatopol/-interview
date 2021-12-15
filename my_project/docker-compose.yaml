@@ -1,0 +1,34 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:13.4
+    privileged: true
+    restart: always
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: katerina
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: my_shop
+
+  backend:
+    build:
+      context: ./my_shop
+    environment:
+      DJANGO_SETTINGS_MODULE: my_shop.my_shop.settings
+    ports:
+      - 8080:8080
+    command: bash -c "
+      python manage.py migrate
+      && gunicorn my_shop.wsgi -b 0.0.0.0:8080
+      "
+    depends_on:
+      - db
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - 8000:8000
+    depends_on:
+      - backend
